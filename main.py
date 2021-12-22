@@ -12,6 +12,7 @@ GREEN = (0, 51, 0)
 def draw_window():
     WIN.fill(GREEN)
     pygame.display.update()
+    
 
 def main():
     clock = pygame.time.Clock()
