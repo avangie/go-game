@@ -1,6 +1,7 @@
 import pygame
 import sys
-#from assets.constans import BOARD_BACKGROUND, HEIGHT, WIDTH, BLACK, WHITE, GREEN, FONT, FONT_SIZE, FONT_COLOR, START_FONT_SIZE
+
+from pygame.constants import K_ESCAPE, KEYDOWN, MOUSEBUTTONDOWN
 from assets.constans import *
 FPS = 60
 
@@ -59,33 +60,21 @@ class Board():
         pygame.display.update()
 
 
-# class Window():
-#     def __init__(self):
-#         pass
 
-#     def draw_window():
-#         WIN.fill(GREEN)
-#         font = pygame.font.Font(FONT, FONT_SIZE)
-#         move_label = font.render("Player 1 - your turn", 1, FONT_COLOR)
-#         WIN.blit(move_label, (100, 50))
-
-
-def draw_window():
+def draw_background():
     WIN.fill(GREEN)
     front = pygame.font.Font(FONT, FONT_SIZE)
-    move_label = front.render("Player 1 - your turn", 1, FONT_COLOR)
+    move_label = front.render("Player 1 - your turn", 1, LIGHT_YELLOW)
     WIN.blit(move_label, (100, 50))
 
 
 def main_game_screen():
-    # WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-    # pygame.display.set_caption("Go Game")
+    pygame.display.set_caption("Go Game")
     IMAGE = pygame.image.load(BOARD_BACKGROUND).convert()
     IMAGE = pygame.transform.scale(IMAGE, (760, 760))
-    # clock = pygame.time.Clock()
     run = True
     while run:
-        draw_window()
+        draw_background()
         BOARD = Board(IMAGE)
         clock.tick(FPS)
         pygame.display.update()
@@ -98,60 +87,87 @@ def main_game_screen():
     quit()
 
 
+click = False
 def start_screen():
+    pygame.display.set_caption("Go Game - start game")
     start = True
     while start:
         WIN.fill(GREEN)
-        draw_label_starting_screen()
-        clock.tick(15)
+        set_start_title_game()
+        set_start_image()
+
+
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        button_start = pygame.Rect(350, 500, 200, 50)
+        button_quit = pygame.Rect(350, 600, 200, 50)
+        button_instructions = pygame.Rect(350, 700, 200, 50)
+
+        if button_start.collidepoint((mouse_x, mouse_y)):
+            if click:
+                main_game_screen()
+        elif button_quit.collidepoint((mouse_x, mouse_y)):
+            if click:
+                pygame.quit()
+                sys.exit()
+        
+
+        font = pygame.font.Font(FONT, START_OPTIONS_FONT_SIZE)
+        label = font.render("Start game", 1, BLACK)
+        pygame.draw.rect(WIN, LIGHT_YELLOW, button_start)
+        label_rect = label.get_rect(center=(WIDTH/2, 525))
+        WIN.blit(label, label_rect)
+        label = font.render("Quit game", 1, BLACK)
+        pygame.draw.rect(WIN, LIGHT_YELLOW, button_quit)
+        label_rect = label.get_rect(center=(WIDTH/2, 625))
+        WIN.blit(label, label_rect)
+        label = font.render("Instructions", 1, BLACK)
+        pygame.draw.rect(WIN, LIGHT_YELLOW, button_instructions)
+        label_rect = label.get_rect(center=(WIDTH/2, 725))
+        WIN.blit(label, label_rect)
+
+
+        clock.tick(FPS)
+        click = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                start = False
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+            if event.type == MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
+        pygame.display.update()
+
     
 
-    pygame.quit()
+    # pygame.quit()
     # quit()
     # return player1_name, player2_name
 
 
-def draw_button():
-    return pygame.Rect(400, 400, 100, 100)
+# def draw_text(text, font, fontsize, surface, x, y):
+#     textobj = font.render(text, )
 
 
-def draw_label_starting_screen():
-    font = pygame.font.Font(FONT, START_FONT_SIZE)
-    label = font.render("Go Game", 1, FONT_COLOR)
-    label_rect = label.get_rect(center=(WIDTH/2, HEIGHT/2 - 150))
+def set_start_title_game():
+    font = pygame.font.Font(FONT, START_TITLE_FONT_SIZE)
+    label = font.render("Go Game", 1, LIGHT_YELLOW)
+    label_rect = label.get_rect(center=(WIDTH/2, HEIGHT/2 - 250))
     WIN.blit(label, label_rect)
-    button = draw_button()
-    run = True
-    while run:
-        for event in pygame.event.get():
-            print('gona')
-            if event.type == pygame.QUIT:
-                run = False
-                break
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_position = event.pos
 
-                if button.collidepoint(mouse_position):
-                    # print('button was pressed at {0}'.format(mouse_position))
-                    run = False
-        pygame.draw.rect(WIN, LIGHT_YELLOW, button)
-        pygame.display.update()
-        #clock.tick(FPS)
-    pygame.display.update()
+def set_start_image():
+    IMAGE = pygame.image.load(ICON).convert_alpha()
+    IMAGE = pygame.transform.scale(IMAGE, (150, 160))
+    WIN.blit(IMAGE, (375,275))
+
 
 if __name__ == "__main__":
     pygame.init()
     clock = pygame.time.Clock()
     WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("Go Game - start game")
     start_screen()
-
-    pygame.init()
-    WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("Go Game")
-    main_game_screen()
 
 

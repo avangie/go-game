@@ -4,12 +4,13 @@ WIDTH, HEIGHT = 900, 900
 ROWS, COLUMNS = 19, 19
 SQUARE_SIZE = 40
 BOARD_BACKGROUND = 'images/mediumwood.jpg'
+ICON = 'images/icon.png'
 
 
 
 #font's properties - start screen
-START_FONT_SIZE = 30
-
+START_TITLE_FONT_SIZE = 30
+START_OPTIONS_FONT_SIZE = 24
 
 
 
