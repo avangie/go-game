@@ -1,0 +1,55 @@
+GO RULES QUICK REFERENCE
+1. Basics. The board starts empty. The board can be any size of grid, usually 13x13, 9x9 or 19x19. One player has black pieces and the
+other has white. The pieces are usually called stones. Black goes first, and then the players take turns. To make a play, you simply put a
+stone down on the board. The stones can only go on the corners of the squares, as shown in the pictures below. Once stones are played,
+they do not move.
+2. Object of the game. At the end of the game you score one point for each point of territory you have, and one point for each stone you
+have captured. You may also count by taking stones you have captured away from your opponent’s territory. White
+gets an extra 7 points to make up for going second. The person with the most points wins.
+3. Territory. Here is the position at the end of a game. The points of white territory are marked with Ws. If you
+imagine moving from one of these points along the lines of the board, you will always come to the edge of the board
+or a white stone, never a black one. So you know that these empty points belong to White. Similarly the points of
+black territory are marked with Bs. White has 6 points of territory and Black has 3.
+4. Liberties. In order to see how to capture stones, you need to know about liberties and chains. The liberties of a
+stone are the empty points which are next to it. The white stone marked with a triangle has four liberties, each
+marked with an X. The points which are diagonally next to the stone do not count as liberties. The black stone
+marked with a triangle has only two liberties, marked Y. The other point next to it has been filled by a white stone.
+Liberties are important, because if a stone runs out of them it will be captured!
+5. Chains. If you put two of your stones next to each other, they become a small chain. So the two black stones on
+the left in this diagram are a chain. You can make the chain bigger by adding more stones to it – it does not matter
+what shape it turns into. Diagonal connections do not count, so the white stones on the right are not all in one chain
+– they are two chains of three stones each. If your stones are in a big chain, it can make it hard for the other player to
+capture them.
+6. Capturing. The isolated black stone in the picture has only one liberty left, marked with an X. If you are White,
+then you can capture this stone. You play at X and take away the last liberty. You can then take this black stone off
+the board. Capturing a chain of stones works in the same way as for a single stone. The chain of four black stones
+marked with triangles has just one liberty, marked Y. If you are White and you play there then you take off the
+whole black chain!
+7. More about capturing. The black stones marked with triangles are not connected to the other black stones. This
+is because a diagonal connection does not count. So the other black stones can not help to save them from being
+captured. If White plays at X, the two stones will be captured. White only needs to fill the liberties of the black
+stones; White does not need to play on places like Y, diagonally away from the black stones. The white stones
+making a capture do not have to be connected to each other. The ones here are in several separate chains, but it does
+not matter.
+8. Capturing yourself! Suppose you are White in this diagram. If you tried to play at X, you would have a chain of
+stones with no liberties. You are not allowed to kill your own stones in this way, so the move at X is not allowed.
+9. Special capture. The only exception to this is if you make a move that gives both players stones or chains with
+no liberties. If this happens, you take off the other person’s stones, but your own stones stay on the board. If you are
+White here, then you can take six black stones by playing at X, even though you appear to make a chain of two
+white stones with no liberties. Your white stones stay on the board and they will all have plenty of liberties once the
+six black stones are removed.
+10. When does the game end? When it is your turn, instead of making a move you can pass. Whenever you pass
+give an extra stone to the other player to add to their captures. The players usually pass when there is no further
+chance to surround more territory or attack enemy stones. When both players pass, one after the other, the game is
+over. To make the number of the moves the same for both players, white must pass last, even if this means a third pass in a row.
+11. Dead stones. Often at the end of a game, there are stones which cannot avoid capture, but have not yet been
+completely surrounded. Usually the players agree to remove these dead stones as captures. In this diagram all the
+stones marked with triangles are dead stones. If the players can not agree, then they must restart the game and play
+on until all the dead stones are captured, or until they agree which stones are dead. Each time you pass you must
+continue to give an extra stone to the other player to add to their captured stones.
+12. Repeating positions. You are not allowed to play a move that makes the position the same as after your last
+move or any one of your previous moves. So imagine that you are Black in this diagram. If White puts a stone at X,
+then they capture one of your stones – the one marked with a triangle. You might like to play next in the space
+where your black stone used to be. However you can not do that straightaway because it would capture the white
+stone now at X and repeat the position. If that was allowed, then the position could repeat over and over without the
+game ever finishing!

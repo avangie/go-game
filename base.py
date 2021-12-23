@@ -1,5 +1,7 @@
 import pygame
 import sys
+import subprocess
+
 
 from pygame.constants import K_ESCAPE, KEYDOWN, MOUSEBUTTONDOWN
 from assets.constans import *
@@ -87,9 +89,10 @@ def main_game_screen():
     quit()
 
 
-click = False
+
 def start_screen():
     pygame.display.set_caption("Go Game - start game")
+    click = False
     start = True
     while start:
         WIN.fill(GREEN)
@@ -99,8 +102,8 @@ def start_screen():
 
         mouse_x, mouse_y = pygame.mouse.get_pos()
         button_start = pygame.Rect(350, 500, 200, 50)
-        button_quit = pygame.Rect(350, 600, 200, 50)
-        button_instructions = pygame.Rect(350, 700, 200, 50)
+        button_quit = pygame.Rect(350, 575, 200, 50)
+        button_instructions = pygame.Rect(350, 650, 200, 50)
 
         if button_start.collidepoint((mouse_x, mouse_y)):
             if click:
@@ -109,6 +112,9 @@ def start_screen():
             if click:
                 pygame.quit()
                 sys.exit()
+        elif button_instructions.collidepoint((mouse_x, mouse_y)):
+            if click:
+                subprocess.Popen(['xdg-open', 'images/go_rules.txt'])
         
 
         font = pygame.font.Font(FONT, START_OPTIONS_FONT_SIZE)
@@ -118,11 +124,11 @@ def start_screen():
         WIN.blit(label, label_rect)
         label = font.render("Quit game", 1, BLACK)
         pygame.draw.rect(WIN, LIGHT_YELLOW, button_quit)
-        label_rect = label.get_rect(center=(WIDTH/2, 625))
+        label_rect = label.get_rect(center=(WIDTH/2, 600))
         WIN.blit(label, label_rect)
         label = font.render("Instructions", 1, BLACK)
         pygame.draw.rect(WIN, LIGHT_YELLOW, button_instructions)
-        label_rect = label.get_rect(center=(WIDTH/2, 725))
+        label_rect = label.get_rect(center=(WIDTH/2, 675))
         WIN.blit(label, label_rect)
 
 
@@ -160,7 +166,7 @@ def set_start_title_game():
 
 def set_start_image():
     IMAGE = pygame.image.load(ICON).convert_alpha()
-    IMAGE = pygame.transform.scale(IMAGE, (150, 160))
+    IMAGE = pygame.transform.scale(IMAGE, (150, 150))
     WIN.blit(IMAGE, (375,275))
 
 

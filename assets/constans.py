@@ -4,8 +4,8 @@ WIDTH, HEIGHT = 900, 900
 ROWS, COLUMNS = 19, 19
 SQUARE_SIZE = 40
 BOARD_BACKGROUND = 'images/mediumwood.jpg'
-ICON = 'images/icon.png'
-
+ICON = 'images/icon3.png'
+FILE = 'images/GoQuickRef.pdf'
 
 
 #font's properties - start screen
