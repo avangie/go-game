@@ -7,7 +7,7 @@ from pygame.constants import K_ESCAPE, KEYDOWN, MOUSEBUTTONDOWN
 from assets.constans import *
 FPS = 60
 
-# mozna, ale mijaloby sie to z celem - kazdy button mialby inna funkcje, ktora triggeruje wiec dla kazdego oddzielna klasa? 
+# mozna, ale mijaloby sie to z celem - kazdy button mialby inna funkcje, ktora triggeruje wiec dla kazdego oddzielna klasa?
 # class Button:
 #     def __init__(self, text, position):
 #         self._text = text
@@ -30,16 +30,16 @@ class Board(back.Board):
     # hmuch = 0
     def __init__(self, image):
         """
-        Create and initialize an empty board. 
+        Create and initialize an empty board.
         Call a function to draw a board.
         """
         super(Board, self).__init__()
-        self.outline = pygame.Rect(30, 30, 720, 720)
+        self.outline = pygame.Rect(45, 45, 810, 810)
         self.IMAGE = image
         # Board.hmuch += 1
         self.draw_board()
 
-    
+
     # @classmethod
     # def much(cls):
     #     return cls.hmuch
@@ -53,20 +53,20 @@ class Board(back.Board):
             - all of the 361 tiles (19x19),
             - 9 star points (small dots).
         Blit it to the screen.
-        
+
         """
         #self.outline.inflate_ip(20, 20)
         rect = self.IMAGE.get_rect()
-        rect.center = (450, 490)
+        rect.center = (450, 450)
         pygame.draw.rect(self.IMAGE, BLACK, self.outline, 4)
         for rows in range(18):
                 for columns in range(18):
-                    rectangle = pygame.Rect(30 + (40*columns), 30 + (40*rows), 40, 40)
+                    rectangle = pygame.Rect(45 + (45*columns), 45 + (45*rows), 45, 45)
                     pygame.draw.rect(self.IMAGE, BLACK, rectangle, 1)
         for row in range(3):
             for col in range(3):
-                xy = (150 + (240*col), 150 + (240*row))
-                pygame.draw.circle(self.IMAGE, BLACK, xy, 4, 0)
+                xy = (180 + (270*col), 180 + (270*row))
+                pygame.draw.circle(self.IMAGE, BLACK, xy, 5, 0)
         WIN.blit(self.IMAGE, rect)
         pygame.display.update()
 
@@ -77,7 +77,7 @@ class Stone(back.Stone):
         Create and initialize a stone, draw as a black or white circle.
         """
         super().__init__(color, point, board)
-        self._coordinates = (self._coordinates[0]*40, self._coordinates[1]*40)
+        self._coordinates = (self._coordinates[0]*45, self._coordinates[1]*45)
         self.draw()
 
     def draw(self):
@@ -94,23 +94,10 @@ class Stone(back.Stone):
         pass
 
 
-
-def draw_background():
-    """
-    Draws background for the main game screen.
-    """
-    WIN.fill(GREEN)
-    # front = pygame.font.Font(FONT, FONT_SIZE)
-    # move_label = front.render("Player 1 - your turn", 1, LIGHT_YELLOW)
-    # WIN.blit(move_label, (100, 50))
-    pygame.display.update()
-
-
 def main_game_screen():
     pygame.display.set_caption("Go Game")
-    draw_background()
     IMAGE = pygame.image.load(BOARD_BACKGROUND).convert()
-    IMAGE = pygame.transform.scale(IMAGE, (780, 780))
+    IMAGE = pygame.transform.scale(IMAGE, (900, 900))
     BOARD = Board(IMAGE)
     pygame.display.update()
     run = True
@@ -124,11 +111,11 @@ def main_game_screen():
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     pygame.quit()
-                    sys.exit()   
+                    sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if BOARD.outline.collidepoint(event.pos) and event.button == 1:
-                    pos_x = int(round((event.pos[0]) / 40))
-                    pos_y = int(round((event.pos[1]) / 40))
+                    pos_x = int(round((event.pos[0]) / 45))
+                    pos_y = int(round((event.pos[1]) / 45))
                     print(pos_x, pos_y)
                     stone = Stone(BOARD.whose_turn(), (pos_x, pos_y), BOARD)
 
@@ -165,7 +152,7 @@ def start_screen():
         elif button_instructions.collidepoint((mouse_x, mouse_y)):
             if click:
                 subprocess.Popen(['xdg-open', 'images/go_rules.txt'])
-        
+
 
         font = pygame.font.Font(FONT, START_OPTIONS_FONT_SIZE)
         label = font.render("Start game", 1, BLACK)
@@ -197,7 +184,7 @@ def start_screen():
                     click = True
         pygame.display.update()
 
-    
+
 
     # pygame.quit()
     # quit()
