@@ -11,6 +11,7 @@ class Board(object):
         Create and initialize a board.
         """
         self._next_player = BLACK
+        self._stones = []
 
     def player(self):
         return self._next_player
@@ -30,13 +31,17 @@ class Board(object):
             return WHITE
 
 
-    def search(self, point, points):
+    def stones(self):
         """
-        Search for the stone.
-
-
+        List, contains all stones on board.
         """
-        pass
+        return self._stones
+    
+    def add_stone(self, point):
+        if point not in self.stones():
+            self._stones.append(point)
+            
+        
         
 
 

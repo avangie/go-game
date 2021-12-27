@@ -1,6 +1,6 @@
 import pygame
 
-WIDTH, HEIGHT = 900, 900
+WIDTH, HEIGHT = 1200, 880
 ROWS, COLUMNS = 19, 19
 SQUARE_SIZE = 40
 BOARD_BACKGROUND = 'images/mediumwood.jpg'
