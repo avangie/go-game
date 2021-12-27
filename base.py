@@ -56,10 +56,11 @@ class Board(back.Board):
                     pygame.draw.rect(WIN, BLACK, rectangle, 1)
         for row in range(3):
             for col in range(3):
-                xy = (160 + (240*col), 160 + (240*row))
+                xy = (200 + (240*col), 200 + (240*row))
                 pygame.draw.circle(WIN, BLACK, xy, 4, 0)
         WIN.blit(WIN, (0,0))
         pygame.display.update()
+
 
 
 class Stone(back.Stone):
@@ -85,41 +86,69 @@ class Stone(back.Stone):
         pass
 
 
+def draw_button_instructions(posx, posy, width, height):
+    """
+    Fill background in the main game screen.
+    """
+    button_instructions = pygame.Rect(posx, posy, width, height)    
 
-def draw_background():
-    """
-    Draws background for the main game screen.
-    """
-    WIN.fill(GREEN)
-    # front = pygame.font.Font(FONT, FONT_SIZE)
-    # move_label = front.render("Player 1 - your turn", 1, LIGHT_YELLOW)
-    # WIN.blit(move_label, (100, 50))
+    pygame.display.update()
+
+
+def set_player_name(player):
+    font = pygame.font.Font(FONT, 50)
+    move_label = font.render(f'Player {player} ', True, LIGHT_YELLOW, GREEN)
+    WIN.blit(move_label, (960, 230))
+    font = pygame.font.Font(FONT, FONT_SIZE)
+    move_label = font.render("- your turn ", True, LIGHT_YELLOW, GREEN)
+    WIN.blit(move_label, (1050, 300))
     pygame.display.update()
 
 
 def main_game_screen():
     pygame.display.set_caption("Go Game")
-    draw_background()
+    WIN.fill(GREEN)
+    #draw_button_instructions()
     IMAGE = pygame.image.load(BOARD_BACKGROUND).convert()
     IMAGE = pygame.transform.scale(IMAGE, (770, 770))
     rect = IMAGE.get_rect()
     rect.center = (440, 440)
     WIN.blit(IMAGE, rect)
     BOARD = Board()
-    pygame.display.update()
+
+
+
+    click = 0
     run = True
+    set_player_name(1)
+    counter = 0
     while run:
+
+
+        font = pygame.font.Font(FONT, START_OPTIONS_FONT_SIZE)    
+        button_instructions = pygame.Rect(920, 700, 200, 50)
+        label = font.render("Instructions", 1, BLACK)
+        pygame.draw.rect(WIN, LIGHT_YELLOW, button_instructions)
+        label_rect = label.get_rect(center=(1020, 725))
+        WIN.blit(label, label_rect)
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        if button_instructions.collidepoint((mouse_x, mouse_y)):
+            if click:
+                subprocess.Popen(['xdg-open', 'images/go_rules.txt'])
+        pygame.display.update()
+
         clock.tick(FPS)
-        #pygame.display.update()
+        click = 0
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run = False
-                break
+                pygame.quit()
+                quit()
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     pygame.quit()
                     sys.exit()   
             elif event.type == pygame.MOUSEBUTTONDOWN:
+                click = 1
                 if BOARD.outline.collidepoint(event.pos) and event.button == 1:
                     pos_x = int(round((event.pos[0]) / 40))         #pierwszy to (2,2)
                     pos_y = int(round((event.pos[1]) / 40))
@@ -131,12 +160,12 @@ def main_game_screen():
                     elif position_of_stone not in BOARD.stones():
                         BOARD.add_stone(position_of_stone)
                         stone = Stone(BOARD.whose_turn(), (pos_x, pos_y), BOARD)
+                        counter += 1
+                        #print(counter)
+                        set_player_name((counter%2)+1)
 
 
 
-
-    pygame.quit()
-    quit()
 
 
 
@@ -197,13 +226,6 @@ def start_screen():
                     click = True
         pygame.display.update()
 
-    
-
-    # pygame.quit()
-    # quit()
-    # return player1_name, player2_name
-
-
 
 def set_start_title_game():
     font = pygame.font.Font(FONT, START_TITLE_FONT_SIZE)
@@ -224,5 +246,4 @@ if __name__ == "__main__":
     start_screen()
 
 
-#funkcja na zmienianie playera 1 na 2
 #mozliwosc wpisania nazw graczy i wypisywanie ich zamiast player 1 2
