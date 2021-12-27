@@ -5,7 +5,7 @@ from assets.constans import BLACK, WHITE
 
 
 
-class Board:
+class Board(object):
     def __init__(self):
         """
         Create and initialize a board.
@@ -41,7 +41,7 @@ class Board:
 
 
 class Stone:
-    def __init__(self, color, coordinates):
+    def __init__(self, color, coordinates, board):
         """
         Create and initialize a stone.
         Coordinates argument is a tuple, ie. (0,0) represents 
@@ -51,9 +51,10 @@ class Stone:
         """
         self._color = color
         self._coordinates = coordinates
+        self._board = board
 
     def remove_stone(self):
         pass
 
-    
+
     

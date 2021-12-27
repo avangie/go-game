@@ -2,7 +2,7 @@ import pygame
 import sys
 import subprocess
 
-
+import back
 from pygame.constants import K_ESCAPE, KEYDOWN, MOUSEBUTTONDOWN
 from assets.constans import *
 FPS = 60
@@ -26,57 +26,65 @@ FPS = 60
 
 
 
-class Board:
+class Board(back.Board):
+    # hmuch = 0
     def __init__(self, image):
         """
         Create and initialize an empty board. 
         Call a function to draw a board.
         """
-        self.outerline = pygame.Rect(20, 20, 720, 720)
+        super(Board, self).__init__()
+        self.outline = pygame.Rect(30, 30, 720, 720)
         self.IMAGE = image
+        # Board.hmuch += 1
         self.draw_board()
+
+    
+    # @classmethod
+    # def much(cls):
+    #     return cls.hmuch
+
 
     def draw_board(self):
         """
         Put an image as the background.
         The board is drawn as follows:
-            - outline,
+            - lines as contour of the board,
             - all of the 361 tiles (19x19),
             - 9 star points (small dots).
         Blit it to the screen.
         
         """
-
+        #self.outline.inflate_ip(20, 20)
         rect = self.IMAGE.get_rect()
         rect.center = (450, 490)
-        pygame.draw.rect(self.IMAGE, BLACK, self.outerline, 4)
+        pygame.draw.rect(self.IMAGE, BLACK, self.outline, 4)
         for rows in range(18):
                 for columns in range(18):
-                    rectangle = pygame.Rect(20 + (40*columns), 20 + (40*rows), 40, 40)
+                    rectangle = pygame.Rect(30 + (40*columns), 30 + (40*rows), 40, 40)
                     pygame.draw.rect(self.IMAGE, BLACK, rectangle, 1)
         for row in range(3):
             for col in range(3):
-                xy = (140 + (240*col), 140 + (240*row))
+                xy = (150 + (240*col), 150 + (240*row))
                 pygame.draw.circle(self.IMAGE, BLACK, xy, 4, 0)
         WIN.blit(self.IMAGE, rect)
         pygame.display.update()
 
 
-class Stone:
-    def __init__(self, color, point):
+class Stone(back.Stone):
+    def __init__(self, color, point, board):
         """
-        Create and initialize a stone, draw as black or white circle.
+        Create and initialize a stone, draw as a black or white circle.
         """
-        self.color = color
-        self.point = point
-        self.coordinates = (self.point[0], self.point[1])
+        super().__init__(color, point, board)
+        self._coordinates = (self._coordinates[0]*40, self._coordinates[1]*40)
         self.draw()
 
     def draw(self):
         """
         Draw the stone.
         """
-        pygame.draw.circle(WIN, self.color, self.coordinates, 15, 0)
+        pygame.draw.circle(WIN, self._color, self._coordinates, 18, 0)
         pygame.display.update()
 
     def remove(self):
@@ -89,32 +97,44 @@ class Stone:
 
 def draw_background():
     """
-    Draws background for the main game page.
+    Draws background for the main game screen.
     """
     WIN.fill(GREEN)
-    front = pygame.font.Font(FONT, FONT_SIZE)
-    move_label = front.render("Player 1 - your turn", 1, LIGHT_YELLOW)
-    WIN.blit(move_label, (100, 50))
+    # front = pygame.font.Font(FONT, FONT_SIZE)
+    # move_label = front.render("Player 1 - your turn", 1, LIGHT_YELLOW)
+    # WIN.blit(move_label, (100, 50))
+    pygame.display.update()
 
 
 def main_game_screen():
     pygame.display.set_caption("Go Game")
+    draw_background()
     IMAGE = pygame.image.load(BOARD_BACKGROUND).convert()
-    IMAGE = pygame.transform.scale(IMAGE, (760, 760))
+    IMAGE = pygame.transform.scale(IMAGE, (780, 780))
     BOARD = Board(IMAGE)
+    pygame.display.update()
     run = True
     while run:
-        draw_background()
         clock.tick(FPS)
-        pygame.display.update()
+        #pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 break
+            elif event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()   
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if BOARD.outerline.collidepoint(event.pos) and event.button == 1:
-                    pos_x =
-                    pos_y = 
+                if BOARD.outline.collidepoint(event.pos) and event.button == 1:
+                    pos_x = int(round((event.pos[0]) / 40))
+                    pos_y = int(round((event.pos[1]) / 40))
+                    print(pos_x, pos_y)
+                    stone = Stone(BOARD.whose_turn(), (pos_x, pos_y), BOARD)
+
+
+
+
     pygame.quit()
     quit()
 
