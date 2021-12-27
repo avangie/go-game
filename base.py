@@ -7,7 +7,7 @@ from pygame.constants import K_ESCAPE, KEYDOWN, MOUSEBUTTONDOWN
 from assets.constans import *
 FPS = 60
 
-
+# mozna, ale mijaloby sie to z celem - kazdy button mialby inna funkcje, ktora triggeruje wiec dla kazdego oddzielna klasa? 
 # class Button:
 #     def __init__(self, text, position):
 #         self._text = text
@@ -26,7 +26,7 @@ FPS = 60
 
 
 
-class Board():
+class Board:
     def __init__(self, image):
         """
         Create and initialize an empty board. 
@@ -62,8 +62,35 @@ class Board():
         pygame.display.update()
 
 
+class Stone:
+    def __init__(self, color, point):
+        """
+        Create and initialize a stone, draw as black or white circle.
+        """
+        self.color = color
+        self.point = point
+        self.coordinates = (self.point[0], self.point[1])
+        self.draw()
+
+    def draw(self):
+        """
+        Draw the stone.
+        """
+        pygame.draw.circle(WIN, self.color, self.coordinates, 15, 0)
+        pygame.display.update()
+
+    def remove(self):
+        """
+        Remove the stone from the board.
+        """
+        pass
+
+
 
 def draw_background():
+    """
+    Draws background for the main game page.
+    """
     WIN.fill(GREEN)
     front = pygame.font.Font(FONT, FONT_SIZE)
     move_label = front.render("Player 1 - your turn", 1, LIGHT_YELLOW)
@@ -74,17 +101,20 @@ def main_game_screen():
     pygame.display.set_caption("Go Game")
     IMAGE = pygame.image.load(BOARD_BACKGROUND).convert()
     IMAGE = pygame.transform.scale(IMAGE, (760, 760))
+    BOARD = Board(IMAGE)
     run = True
     while run:
         draw_background()
-        BOARD = Board(IMAGE)
         clock.tick(FPS)
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                pass
+                break
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if BOARD.outerline.collidepoint(event.pos) and event.button == 1:
+                    pos_x =
+                    pos_y = 
     pygame.quit()
     quit()
 
@@ -154,9 +184,6 @@ def start_screen():
     # return player1_name, player2_name
 
 
-# def draw_text(text, font, fontsize, surface, x, y):
-#     textobj = font.render(text, )
-
 
 def set_start_title_game():
     font = pygame.font.Font(FONT, START_TITLE_FONT_SIZE)
@@ -177,3 +204,5 @@ if __name__ == "__main__":
     start_screen()
 
 
+#funkcja na zmienianie playera 1 na 2
+#mozliwosc wpisania nazw graczy i wypisywanie ich zamiast player 1 2
