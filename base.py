@@ -7,24 +7,6 @@ from pygame.constants import K_ESCAPE, KEYDOWN, MOUSEBUTTONDOWN
 from assets.constans import *
 FPS = 60
 
-# mozna, ale mijaloby sie to z celem - kazdy button mialby inna funkcje, ktora triggeruje wiec dla kazdego oddzielna klasa? 
-# class Button:
-#     def __init__(self, text, position):
-#         self._text = text
-#         self.x, self.y = position
-#         self.font = pygame.font.Font(FONT, FONT_SIZE)
-
-#     def mouse_click(self, event):
-#         if event.type == pygame.MOUSEBUTTONDOWN:
-#             if pygame.mouse.get_pressed()[0]:
-#                 print(self)
-
-
-#     def mouse_on_button(self):
-#         x, y = pygame.mouse.get_pos()
-#         if self.rect
-
-
 
 class Board(back.Board):
     def __init__(self):
@@ -59,10 +41,7 @@ class Board(back.Board):
         Blit it to the screen.
         
         """
-        #self.outline.inflate_ip(20, 20)
-
         pygame.draw.rect(IMAGE, BLACK, self.collide_rect, 4)
-        
         for rows in range(18):
                 for columns in range(18):
                     rectangle = pygame.Rect(25 + (40*columns), 25 + (40*rows), 40, 40)
@@ -93,7 +72,6 @@ class Stone(back.Stone):
         """
         Draw the stone.
         """
-        
         pygame.draw.circle(WIN, self._color, self._coords, 18, 0)
         pygame.display.update()
 
@@ -101,22 +79,11 @@ class Stone(back.Stone):
         """
         Remove the stone from the board.
         """
-        print('wyjeb')
-        print(f'{self.coords()[0]}, {self.coords()[1]}')
         coord = self.coords()[0] - 20, self.coords()[1] - 20
         place = pygame.Rect((coord[0]-55, coord[1]-55), (40,40))
         WIN.blit(self.image, coord, place)
         super().remove_stone()
         pygame.display.update()
-
-
-# def draw_button_instructions(posx, posy, width, height):
-#     """
-#     Fill background in the main game screen.
-#     """
-#     button_instructions = pygame.Rect(posx, posy, width, height)    
-
-#     pygame.display.update()
 
 
 def set_player_name(player):
@@ -128,9 +95,6 @@ def set_player_name(player):
 def main_game_screen():
     pygame.display.set_caption("Go Game")
     WIN.fill(GREEN)
-    #draw_button_instructions()
-    # IMAGE = pygame.image.load(BOARD_BACKGROUND).convert()
-    # IMAGE = pygame.transform.scale(IMAGE, (770, 770))
     rect = IMAGE.get_rect()
     rect.center = (440, 440)
     WIN.blit(IMAGE, rect)
@@ -145,8 +109,6 @@ def main_game_screen():
     click = 0
     run = True
     while run:
-
-
         font = pygame.font.Font(FONT, START_OPTIONS_FONT_SIZE)    
         button_instructions = pygame.Rect(920, 700, 200, 50)
         label = font.render("Instructions", 1, BLACK)
@@ -174,22 +136,19 @@ def main_game_screen():
                 if BOARD.outline.collidepoint(event.pos) and event.button == 1:
                     pos_x = int(round((event.pos[0]) / 40))         #pierwszy to (2,2)
                     pos_y = int(round((event.pos[1]) / 40))
-                    #print(event.pos[0], event.pos[1])
-                    print(pos_x, pos_y)
                     position_of_stone = (pos_x, pos_y)
                     if pos_x < 2 or pos_y < 2 or pos_x > 20 or pos_y > 20:    
                         continue
                     is_stone = BOARD.find(coord = position_of_stone)
+
                     if not is_stone:
                         stone = Stone(BOARD.whose_turn(), (pos_x, pos_y), BOARD, IMAGE)
                         counter += 1
                         print(stone.neighbours())
                         set_player_name((counter%2)+1)
+                    elif is_stone:
+                        pass
                     BOARD.propert_u(stone)
-
-
-
-
 
 
 def start_screen():
@@ -200,7 +159,6 @@ def start_screen():
         WIN.fill(GREEN)
         set_start_title_game()
         set_start_image()
-
 
         mouse_x, mouse_y = pygame.mouse.get_pos()
         button_start = pygame.Rect(500, 500, 200, 50)
@@ -268,9 +226,4 @@ if __name__ == "__main__":
     WIN = pygame.display.set_mode((WIDTH, HEIGHT))
     IMAGE = pygame.image.load(BOARD_BACKGROUND).convert()
     IMAGE = pygame.transform.scale(IMAGE, (770, 770))
-
-    #IMAGE.fill(GREEN)
     start_screen()
-
-
-#mozliwosc wpisania nazw graczy i wypisywanie ich zamiast player 1 2

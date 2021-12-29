@@ -1,9 +1,4 @@
-
 from assets.constans import BLACK, WHITE
-
-
-
-
 
 class Board(object):
     def __init__(self):
@@ -13,7 +8,6 @@ class Board(object):
         self._next_player = BLACK
         self._stones = []
         self._sets = []
-
 
     def player(self):
         return self._next_player
@@ -35,7 +29,6 @@ class Board(object):
             self.set_next_player(BLACK)
             return WHITE
 
-
     def stones(self):
         """
         List, contains all stones on board.
@@ -46,19 +39,17 @@ class Board(object):
         if point not in self.stones():
             self._stones.append(point)
 
-    def find(self, coords = [], coord=None):
+    def find(self, coords = None, coord=None):
+        if not coords:
+            coords = []
         stones = []
         for aset in self.get_set():
             for stone in aset._set:
+                if stone.coordy() == coord and not coords:
+                    return stone
                 if stone.coordy() in coords:
                     stones.append(stone)
-                elif stone.coordy() == coord and coords is None:
-                    return stone
-        return stones
-                
-            
-        
-        
+        return stones      
 
 
 class Stone:
@@ -70,13 +61,10 @@ class Stone:
         Color argument is a color of the stone - white or black.
         
         """
-
         self._color = color
         self._coordinates = coordinates
-        #print(self._coordinates[0] + 1)
         self._board = board
         self._set = self.fset()
-
 
     def get_board(self):
         return self._board
@@ -128,7 +116,6 @@ class Stone:
                 points.remove(neighbor)
         return points
 
-    
     def properties(self):
         a = self.neighbours()
         stones = self.get_board().find(coords=a)
@@ -136,10 +123,8 @@ class Stone:
             a.remove(stone._coordinates)
         return a
 
-
     def remove_stone(self):
         self.get_set()._set.remove(self)
-        print('usun')
         del self
 
 
