@@ -36,6 +36,14 @@ class Board(back.Board):
         self.outline = pygame.Rect(80, 80, 720, 720)
         self.draw_board()
 
+    def propert_u(self, stone=None):
+        for group in self._sets:
+            if stone:
+                if group == stone._set:
+                    continue
+            group.properties_w()
+        if stone:
+            stone.get_set().properties_w()
 
     def draw_board(self):
         """
@@ -64,45 +72,52 @@ class Board(back.Board):
 
 
 class Stone(back.Stone):
-    def __init__(self, color, point, board):
+    def __init__(self, color, point, board, image):
         """
         Create and initialize a stone, draw as a black or white circle.
         """
         super().__init__(color, point, board)
-        self._coordinates = ((self._coordinates[0])*40, (self._coordinates[1])*40)
-        self.draw()
+        self._coords = ((self._coordinates[0])*40, (self._coordinates[1])*40)
+        self.image = image
+        self.draw_stone()
 
-    def draw(self):
+    def coords(self):
+        return self._coords
+
+    def draw_stone(self):
         """
         Draw the stone.
         """
-        pygame.draw.circle(WIN, self._color, self._coordinates, 18, 0)
+        
+        pygame.draw.circle(WIN, self._color, self._coords, 18, 0)
         pygame.display.update()
 
     def remove(self):
         """
         Remove the stone from the board.
         """
-        pass
+        print('wyjeb')
+        print(f'{self.coords()[0]}, {self.coords()[1]}')
+        coord = self.coords()[0] - 20, self.coords()[1] - 20
+        place = pygame.Rect(coord, (40,40))
+        WIN.blit(self.image, coord, place)
+        super().remove_stone()
+        pygame.display.update()
 
 
-def draw_button_instructions(posx, posy, width, height):
-    """
-    Fill background in the main game screen.
-    """
-    button_instructions = pygame.Rect(posx, posy, width, height)    
+# def draw_button_instructions(posx, posy, width, height):
+#     """
+#     Fill background in the main game screen.
+#     """
+#     button_instructions = pygame.Rect(posx, posy, width, height)    
 
-    pygame.display.update()
+#     pygame.display.update()
 
 
 def set_player_name(player):
     font = pygame.font.Font(FONT, 50)
     move_label = font.render(f'Player {player} ', True, LIGHT_YELLOW, GREEN)
     WIN.blit(move_label, (960, 230))
-    font = pygame.font.Font(FONT, FONT_SIZE)
-    move_label = font.render("- your turn ", True, LIGHT_YELLOW, GREEN)
-    WIN.blit(move_label, (1050, 300))
-    pygame.display.update()
 
 
 def main_game_screen():
@@ -116,12 +131,14 @@ def main_game_screen():
     WIN.blit(IMAGE, rect)
     BOARD = Board()
 
-
-
+    set_player_name(1)
+    font = pygame.font.Font(FONT, FONT_SIZE)
+    move_label = font.render("- your turn ", True, LIGHT_YELLOW, GREEN)
+    WIN.blit(move_label, (1050, 300))
+    
+    counter = 0
     click = 0
     run = True
-    set_player_name(1)
-    counter = 0
     while run:
 
 
@@ -152,17 +169,18 @@ def main_game_screen():
                 if BOARD.outline.collidepoint(event.pos) and event.button == 1:
                     pos_x = int(round((event.pos[0]) / 40))         #pierwszy to (2,2)
                     pos_y = int(round((event.pos[1]) / 40))
-                    print(event.pos[0], event.pos[1])
+                    #print(event.pos[0], event.pos[1])
                     print(pos_x, pos_y)
                     position_of_stone = (pos_x, pos_y)
-                    if pos_x == 0 or pos_y == 0:    
+                    if pos_x < 2 or pos_y < 2 or pos_x > 20 or pos_y > 20:    
                         continue
-                    elif position_of_stone not in BOARD.stones():
-                        BOARD.add_stone(position_of_stone)
-                        stone = Stone(BOARD.whose_turn(), (pos_x, pos_y), BOARD)
+                    is_stone = BOARD.find(coord = position_of_stone)
+                    if not is_stone:
+                        stone = Stone(BOARD.whose_turn(), (pos_x, pos_y), BOARD, IMAGE)
                         counter += 1
-                        #print(counter)
+                        print(stone.neighbours())
                         set_player_name((counter%2)+1)
+                    BOARD.propert_u(stone)
 
 
 
