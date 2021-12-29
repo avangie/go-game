@@ -12,24 +12,25 @@ class Board(back.Board):
     def __init__(self):
         """
         Create and initialize an empty board. 
+        Outline is a rectangle which is used as a collidebox.
         Call a function to draw a board.
         """
-        super(Board, self).__init__()
+        super().__init__()
         self.collide_rect = pygame.rect.Rect(25,25, 720,720)
         self.outline = pygame.rect.Rect(25, 25, 780, 780)
         self.draw_board()
 
     def propert_u(self, stone=None):
-        for group in self._sets:
+        for group in self.get_set():
             if stone:
-                if group == stone._set:
+                if group == stone.get_set():
                     continue
             group.properties_w()
         if stone:
             stone.get_set().properties_w()
 
-    def outl(self):
-        self.outline = self.outline
+    def ooutline(self):
+        return self.collide_rect
 
     def draw_board(self):
         """
@@ -41,7 +42,7 @@ class Board(back.Board):
         Blit it to the screen.
         
         """
-        pygame.draw.rect(IMAGE, BLACK, self.collide_rect, 4)
+        pygame.draw.rect(IMAGE, BLACK, self.ooutline(), 4)
         for rows in range(18):
                 for columns in range(18):
                     rectangle = pygame.Rect(25 + (40*columns), 25 + (40*rows), 40, 40)
@@ -58,21 +59,26 @@ class Board(back.Board):
 class Stone(back.Stone):
     def __init__(self, color, point, board, image):
         """
-        Create and initialize a stone, draw as a black or white circle.
+        Create and initialize a stone, 
+        count its coordinates,
+        draw it as a black or white circle.
         """
         super().__init__(color, point, board)
-        self._coords = ((self._coordinates[0])*40, (self._coordinates[1])*40)
+        self._coords = ((self.coordy()[0])*40, (self.coordy()[1])*40)
         self.image = image
         self.draw_stone()
 
     def coords(self):
         return self._coords
 
+    def get_image(self):
+        return self.image
+
     def draw_stone(self):
         """
         Draw the stone.
         """
-        pygame.draw.circle(WIN, self._color, self._coords, 18, 0)
+        pygame.draw.circle(WIN, self.get_color(), self.coords(), 18, 0)
         pygame.display.update()
 
     def remove(self):
@@ -81,7 +87,7 @@ class Stone(back.Stone):
         """
         coord = self.coords()[0] - 20, self.coords()[1] - 20
         place = pygame.Rect((coord[0]-55, coord[1]-55), (40,40))
-        WIN.blit(self.image, coord, place)
+        WIN.blit(self.get_image(), coord, place)
         super().remove_stone()
         pygame.display.update()
 
@@ -140,15 +146,30 @@ def main_game_screen():
                     if pos_x < 2 or pos_y < 2 or pos_x > 20 or pos_y > 20:    
                         continue
                     is_stone = BOARD.find(coord = position_of_stone)
-
-                    if not is_stone:
+                    if is_stone:
+                        pass
+                    elif not is_stone:
                         stone = Stone(BOARD.whose_turn(), (pos_x, pos_y), BOARD, IMAGE)
                         counter += 1
                         print(stone.neighbours())
                         set_player_name((counter%2)+1)
-                    elif is_stone:
-                        pass
+                    
                     BOARD.propert_u(stone)
+
+def draw_buttons_start_page(button_start, button_quit, button_instructions):
+    font = pygame.font.Font(FONT, START_OPTIONS_FONT_SIZE)
+    label = font.render("Start game", 1, BLACK)
+    pygame.draw.rect(WIN, LIGHT_YELLOW, button_start)
+    label_rect = label.get_rect(center=(WIDTH/2, 525))
+    WIN.blit(label, label_rect)
+    label = font.render("Quit game", 1, BLACK)
+    pygame.draw.rect(WIN, LIGHT_YELLOW, button_quit)
+    label_rect = label.get_rect(center=(WIDTH/2, 600))
+    WIN.blit(label, label_rect)
+    label = font.render("Instructions", 1, BLACK)
+    pygame.draw.rect(WIN, LIGHT_YELLOW, button_instructions)
+    label_rect = label.get_rect(center=(WIDTH/2, 675))
+    WIN.blit(label, label_rect)
 
 
 def start_screen():
@@ -164,6 +185,7 @@ def start_screen():
         button_start = pygame.Rect(500, 500, 200, 50)
         button_quit = pygame.Rect(500, 575, 200, 50)
         button_instructions = pygame.Rect(500, 650, 200, 50)
+        draw_buttons_start_page(button_start, button_quit, button_instructions)
 
         if button_start.collidepoint((mouse_x, mouse_y)):
             if click:
@@ -176,22 +198,6 @@ def start_screen():
             if click:
                 subprocess.Popen(['xdg-open', 'images/go_rules.txt'])
         
-
-        font = pygame.font.Font(FONT, START_OPTIONS_FONT_SIZE)
-        label = font.render("Start game", 1, BLACK)
-        pygame.draw.rect(WIN, LIGHT_YELLOW, button_start)
-        label_rect = label.get_rect(center=(WIDTH/2, 525))
-        WIN.blit(label, label_rect)
-        label = font.render("Quit game", 1, BLACK)
-        pygame.draw.rect(WIN, LIGHT_YELLOW, button_quit)
-        label_rect = label.get_rect(center=(WIDTH/2, 600))
-        WIN.blit(label, label_rect)
-        label = font.render("Instructions", 1, BLACK)
-        pygame.draw.rect(WIN, LIGHT_YELLOW, button_instructions)
-        label_rect = label.get_rect(center=(WIDTH/2, 675))
-        WIN.blit(label, label_rect)
-
-
         clock.tick(FPS)
         click = False
         for event in pygame.event.get():

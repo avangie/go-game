@@ -13,12 +13,9 @@ START_TITLE_FONT_SIZE = 30
 START_OPTIONS_FONT_SIZE = 24
 
 
-
-
 #font's properties - main game screen
 FONT = '/usr/share/fonts/truetype/msttcorefonts/Georgia.ttf'
 FONT_SIZE = 18
-FONT_COLOR = (242, 242, 242)
 
 # colors in rgb 
 WHITE = (255, 255, 255)

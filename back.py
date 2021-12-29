@@ -37,7 +37,7 @@ class Board(object):
     
     def add_stone(self, point):
         if point not in self.stones():
-            self._stones.append(point)
+            self.stones().append(point)
 
     def find(self, coords = None, coord=None):
         if not coords:
@@ -120,7 +120,7 @@ class Stone:
         a = self.neighbours()
         stones = self.get_board().find(coords=a)
         for stone in stones:
-            a.remove(stone._coordinates)
+            a.remove(stone.coordy())
         return a
 
     def remove_stone(self):
@@ -155,7 +155,7 @@ class Family():
 
     def properties_w(self):
         property = []
-        for stone in self._set:
+        for stone in self.get_set():
             for properties in stone.properties():
                 property.append(properties)
         self.set_property(property)
@@ -163,7 +163,7 @@ class Family():
             self.remove()
 
     def merge(self, set):
-        for stone in set._set:
+        for stone in set.get_set():
             stone._set = self
             self.get_set().append(stone)
         self.get_board().get_set().remove(set)
