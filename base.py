@@ -33,7 +33,8 @@ class Board(back.Board):
         Call a function to draw a board.
         """
         super(Board, self).__init__()
-        self.outline = pygame.Rect(80, 80, 720, 720)
+        self.collide_rect = pygame.rect.Rect(25,25, 720,720)
+        self.outline = pygame.rect.Rect(25, 25, 780, 780)
         self.draw_board()
 
     def propert_u(self, stone=None):
@@ -44,6 +45,9 @@ class Board(back.Board):
             group.properties_w()
         if stone:
             stone.get_set().properties_w()
+
+    def outl(self):
+        self.outline = self.outline
 
     def draw_board(self):
         """
@@ -57,16 +61,17 @@ class Board(back.Board):
         """
         #self.outline.inflate_ip(20, 20)
 
-        pygame.draw.rect(WIN, BLACK, self.outline, 4)
+        pygame.draw.rect(IMAGE, BLACK, self.collide_rect, 4)
+        
         for rows in range(18):
                 for columns in range(18):
-                    rectangle = pygame.Rect(80 + (40*columns), 80 + (40*rows), 40, 40)
-                    pygame.draw.rect(WIN, BLACK, rectangle, 1)
+                    rectangle = pygame.Rect(25 + (40*columns), 25 + (40*rows), 40, 40)
+                    pygame.draw.rect(IMAGE, BLACK, rectangle, 1)
         for row in range(3):
             for col in range(3):
-                xy = (200 + (240*col), 200 + (240*row))
-                pygame.draw.circle(WIN, BLACK, xy, 4, 0)
-        WIN.blit(WIN, (0,0))
+                xy = (145 + (240*col), 145 + (240*row))
+                pygame.draw.circle(IMAGE, BLACK, xy, 4, 0)
+        WIN.blit(IMAGE, (55,55))
         pygame.display.update()
 
 
@@ -99,7 +104,7 @@ class Stone(back.Stone):
         print('wyjeb')
         print(f'{self.coords()[0]}, {self.coords()[1]}')
         coord = self.coords()[0] - 20, self.coords()[1] - 20
-        place = pygame.Rect(coord, (40,40))
+        place = pygame.Rect((coord[0]-55, coord[1]-55), (40,40))
         WIN.blit(self.image, coord, place)
         super().remove_stone()
         pygame.display.update()
@@ -124,8 +129,8 @@ def main_game_screen():
     pygame.display.set_caption("Go Game")
     WIN.fill(GREEN)
     #draw_button_instructions()
-    IMAGE = pygame.image.load(BOARD_BACKGROUND).convert()
-    IMAGE = pygame.transform.scale(IMAGE, (770, 770))
+    # IMAGE = pygame.image.load(BOARD_BACKGROUND).convert()
+    # IMAGE = pygame.transform.scale(IMAGE, (770, 770))
     rect = IMAGE.get_rect()
     rect.center = (440, 440)
     WIN.blit(IMAGE, rect)
@@ -261,6 +266,10 @@ if __name__ == "__main__":
     pygame.init()
     clock = pygame.time.Clock()
     WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+    IMAGE = pygame.image.load(BOARD_BACKGROUND).convert()
+    IMAGE = pygame.transform.scale(IMAGE, (770, 770))
+
+    #IMAGE.fill(GREEN)
     start_screen()
 
 
