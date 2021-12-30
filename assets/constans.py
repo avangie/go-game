@@ -1,5 +1,3 @@
-import pygame
-
 WIDTH, HEIGHT = 1200, 880
 ROWS, COLUMNS = 19, 19
 SQUARE_SIZE = 40
