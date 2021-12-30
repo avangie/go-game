@@ -85,10 +85,10 @@ class Stone(back.Stone):
         by overdrawing a fragment of the board
         that is under the stone over it.
         """
+        super().remove_stone()
         coord = self.coords()[0] - 20, self.coords()[1] - 20
         place = pygame.Rect((coord[0]-55, coord[1]-55), (40,40))
         WIN.blit(self.get_image(), coord, place)
-        super().remove_stone()
         pygame.display.update()
 
 
