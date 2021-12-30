@@ -189,7 +189,7 @@ class Family:
     def merge(self, set):
         """
         Merge two families.
-        Used when setting a stone creates one family,
+        Used when putting down a stone creates one family,
         connecting dwo separate ones.
         """
         for stone in set.get_set():
