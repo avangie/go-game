@@ -1,13 +1,13 @@
 from assets.constans import BLACK, WHITE
 
-class Board(object):
+class Board:
     def __init__(self):
         """
         Create and initialize a board.
         """
         self._next_player = BLACK
         self._stones = []
-        self._sets = []
+        self.sets = []
 
     def player(self):
         return self._next_player
@@ -16,7 +16,7 @@ class Board(object):
         self._next_player = player
 
     def get_set(self):
-        return self._sets
+        return self.sets
     
     def whose_turn(self):
         """
@@ -36,19 +36,25 @@ class Board(object):
         return self._stones
     
     def add_stone(self, point):
+        """
+        Add stone to a list.
+        """
         if point not in self.stones():
             self.stones().append(point)
 
-    def find(self, coords = None, coord=None):
+    def find(self, coords = None, coord = None):
+        """
+        Find stones on the board by given coordinates.
+        """
         if not coords:
             coords = []
         stones = []
         for aset in self.get_set():
-            for stone in aset._set:
-                if stone.coordy() == coord and not coords:
-                    return stone
+            for stone in aset.get_set():
                 if stone.coordy() in coords:
                     stones.append(stone)
+                elif stone.coordy() == coord and not coords:
+                    return stone 
         return stones      
 
 
@@ -56,42 +62,52 @@ class Stone:
     def __init__(self, color, coordinates, board):
         """
         Create and initialize a stone.
-        Coordinates argument is a tuple, ie. (0,0) represents 
+        Coordinates argument is a tuple, ie. (2,2) represents 
         upper left corner of the board.
         Color argument is a color of the stone - white or black.
         
         """
         self._color = color
         self._coordinates = coordinates
-        self._board = board
-        self._set = self.fset()
+        self.board = board
+        self.set = self.fset()
 
     def get_board(self):
-        return self._board
+        return self.board
 
     def get_color(self):
         return self._color
 
     def get_set(self):
-        return self._set
+        return self.set
+
+    def set_set(self, set):
+        self.set = set
 
     def fset(self):
+        """
+        Find a set (family) for a stone.
+        If none, creates a family.
+        """
         sets = []
         stones = self.get_board().find(coords = self.neighbours())
         for stone in stones:
             if stone.get_set() not in sets and stone.get_color() == self.get_color():
                 sets.append(stone.get_set())
-        if not sets:
-            set = Family(self.get_board(), self)
-            return set
-        else:
+        if sets:
             if len(sets) > 1:
                 for fam in sets[1:]:
                     sets[0].merge(fam)
-            sets[0]._set.append(self)
-            return sets[0]
+            sets[0].get_set().append(self)
+            return sets[0]     
+        else:
+            set = Family(self.get_board(), self)
+            return set
 
     def find_all_neigh(self):
+        """
+        Create a list of all possible neighbors of the stone.
+        """
         left = (self.coordy()[0] - 1, self.coordy()[1])
         right = (self.coordy()[0] + 1, self.coordy()[1])
         upper = (self.coordy()[0], self.coordy()[1] - 1)
@@ -100,12 +116,14 @@ class Stone:
         return points
 
     def coordy(self):
-        #print(self._coordinates)
         return self._coordinates
 
     def neighbours(self):
+        """
+        In edge cases, removes a non-existent neighbor from 
+        the list of all possible neighbors.
+        """
         points = self.find_all_neigh()
-        #print(points)
         copy_points = points
         for neighbor in points:
             if self.coordy()[0] == 20 and self.coordy()[1] == 2:
@@ -124,19 +142,22 @@ class Stone:
         return a
 
     def remove_stone(self):
-        self.get_set()._set.remove(self)
+        """
+        Remove a stone.
+        """
+        self.get_set().get_set().remove(self)
         del self
 
 
-class Family():
+class Family:
     def __init__(self, board, set):
         self.property = None
         self._board = board
-        self._set = [set]
+        self.set = [set]
         self._board.get_set().append(self)
 
     def get_set(self):
-        return self._set
+        return self.set
 
     def get_board(self):
         return self._board
@@ -148,7 +169,10 @@ class Family():
         self.property = set(property)
 
     def remove(self):
-        while self._set:
+        """
+        Delete a family in case it got enclosed.
+        """
+        while self.get_set():
             self.get_set()[0].remove()
         self.get_board().get_set().remove(self)
         del self
@@ -163,8 +187,13 @@ class Family():
             self.remove()
 
     def merge(self, set):
+        """
+        Merge two families.
+        Used when setting a stone creates one family,
+        connecting dwo separate ones.
+        """
         for stone in set.get_set():
-            stone._set = self
+            stone.set_set(self)
             self.get_set().append(stone)
         self.get_board().get_set().remove(set)
         del set

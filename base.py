@@ -35,8 +35,8 @@ class Board(back.Board):
     def draw_board(self):
         """
         Put an image as the background.
-        The board is drawn as follows:
-            - lines as contour of the board,
+        The board is drawn on the image as follows:
+            - lines as a contour of the board,
             - all of the 361 tiles (19x19),
             - 9 star points (small dots).
         Blit it to the screen.
@@ -52,8 +52,6 @@ class Board(back.Board):
                 xy = (145 + (240*col), 145 + (240*row))
                 pygame.draw.circle(IMAGE, BLACK, xy, 4, 0)
         WIN.blit(IMAGE, (55,55))
-        pygame.display.update()
-
 
 
 class Stone(back.Stone):
@@ -83,7 +81,9 @@ class Stone(back.Stone):
 
     def remove(self):
         """
-        Remove the stone from the board.
+        Remove the stone from the board
+        by overdrawing a fragment of the board
+        that is under the stone over it.
         """
         coord = self.coords()[0] - 20, self.coords()[1] - 20
         place = pygame.Rect((coord[0]-55, coord[1]-55), (40,40))
@@ -93,12 +93,25 @@ class Stone(back.Stone):
 
 
 def set_player_name(player):
+    """
+    Set player name: 
+    - 1 represents it is black's turn
+    - 2 represents it's white's turn
+    """
     font = pygame.font.Font(FONT, 50)
     move_label = font.render(f'Player {player} ', True, LIGHT_YELLOW, GREEN)
     WIN.blit(move_label, (960, 230))
 
 
 def main_game_screen():
+    """
+    Display the main game screen:
+    - board
+    - instructions button
+    - player's turn
+
+    Pressing Esc key closes the game.
+    """
     pygame.display.set_caption("Go Game")
     WIN.fill(GREEN)
     rect = IMAGE.get_rect()
@@ -113,8 +126,7 @@ def main_game_screen():
     
     counter = 0
     click = 0
-    run = True
-    while run:
+    while True:
         font = pygame.font.Font(FONT, START_OPTIONS_FONT_SIZE)    
         button_instructions = pygame.Rect(920, 700, 200, 50)
         label = font.render("Instructions", 1, BLACK)
@@ -146,17 +158,23 @@ def main_game_screen():
                     if pos_x < 2 or pos_y < 2 or pos_x > 20 or pos_y > 20:    
                         continue
                     is_stone = BOARD.find(coord = position_of_stone)
-                    if is_stone:
-                        pass
-                    elif not is_stone:
+                    if not is_stone:
                         stone = Stone(BOARD.whose_turn(), (pos_x, pos_y), BOARD, IMAGE)
                         counter += 1
-                        print(stone.neighbours())
-                        set_player_name((counter%2)+1)
-                    
+                        set_player_name((counter%2)+1) 
+                    elif is_stone:
+                        pass
                     BOARD.propert_u(stone)
 
 def draw_buttons_start_page(button_start, button_quit, button_instructions):
+    """
+    Draw three buttons on the start screen
+    of the game. The buttons are responsible of:
+    - starting the game
+    - quitting the game
+    - displaying instructions of the game.
+    Blit it to the screen.
+    """
     font = pygame.font.Font(FONT, START_OPTIONS_FONT_SIZE)
     label = font.render("Start game", 1, BLACK)
     pygame.draw.rect(WIN, LIGHT_YELLOW, button_start)
@@ -173,10 +191,14 @@ def draw_buttons_start_page(button_start, button_quit, button_instructions):
 
 
 def start_screen():
+    """
+    Display a start screen with a title, an icon and three buttons.
+    If 'Start game' button is clicked, the main game screen opens.
+    Pressing Esc key closes the game.
+    """
     pygame.display.set_caption("Go Game - start game")
     click = False
-    start = True
-    while start:
+    while True:
         WIN.fill(GREEN)
         set_start_title_game()
         set_start_image()
@@ -215,12 +237,18 @@ def start_screen():
 
 
 def set_start_title_game():
+    """
+    Set title of the game and blit it to the start screen.
+    """
     font = pygame.font.Font(FONT, START_TITLE_FONT_SIZE)
     label = font.render("Go Game", 1, LIGHT_YELLOW)
     label_rect = label.get_rect(center=(WIDTH/2, HEIGHT/2 - 250))
     WIN.blit(label, label_rect)
 
 def set_start_image():
+    """
+    Set game icon and blit it to the start screen.
+    """
     IMAGE = pygame.image.load(ICON).convert_alpha()
     IMAGE = pygame.transform.scale(IMAGE, (150, 150))
     WIN.blit(IMAGE, (525,275))
